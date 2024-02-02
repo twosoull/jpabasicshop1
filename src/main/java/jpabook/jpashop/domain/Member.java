@@ -8,19 +8,30 @@ import java.util.List;
 public class Member {
 
     @Id @GeneratedValue
-    @Column(name = "MEMBER_ID")
     private Long id;
 
     @Column(name = "USERNAME")
     private String username;
 
-    @ManyToOne
-    @JoinColumn(name="TEAM_ID")
-    private Team team;
-
     @OneToMany(mappedBy = "member")
     private List<Orders> ordersList = new ArrayList<>();
 
+    @ManyToOne
+    @JoinColumn(name = "TEAM_ID", insertable = false, updatable = false)
+    private Team team;
+
+    @OneToOne
+    @JoinColumn(name = "LOCKER_ID")
+    private Locker locker;
+/*  다대다
+
+    @ManyToMany
+    @JoinTable(name = "MEMBER_PRODUCT")
+    private List<Product> products = new ArrayList<>();
+*/
+
+    @OneToMany(mappedBy = "member")
+    private List<MemberProduct> memberProducts = new ArrayList<>();
     public Long getId() {
         return id;
     }
@@ -37,16 +48,5 @@ public class Member {
         this.username = username;
     }
 
-    public Team getTeam() {
-        return team;
-    }
 
-    public void changeTeam(Team team) {
-        this.team = team;
-        team.getMembers().add(this);
-    }
-
-    public void setTeam(Team team) {
-        this.team = team;
-    }
 }

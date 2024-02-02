@@ -25,6 +25,10 @@ public class Orders {
     @OneToMany(mappedBy = "orders")
     private List<OrderItem> orderItems = new ArrayList<>();
 
+    @OneToOne
+    @JoinColumn(name = "DELIVERY_ID")
+    private Delivery delivery;
+
     public Long getId() {
         return id;
     }
@@ -59,7 +63,6 @@ public class Orders {
 
     public void addOrderItem(OrderItem orderItem){
         orderItems.add(orderItem);
-        orderItem.setOrder(this);
     }
 
 }

@@ -12,8 +12,13 @@ public class Team {
     private Long id;
     private String name;
 
-    @OneToMany(mappedBy = "team") //mappedBy는 나는 무엇과 연결되어있지? 라면 Member에서 선언한 필드의 team이다.
-    private List<Member> members = new ArrayList<>(); //arrayList를 쓰는 이유는 nullPoint가 뜨지 않기 위함
+    //다대일 단방향
+    //@OneToMany(mappedBy = "team") //mappedBy는 나는 무엇과 연결되어있지? 라면 Member에서 선언한 필드의 team이다.
+    //private List<Member> members = new ArrayList<>(); //arrayList를 쓰는 이유는 nullPoint가 뜨지 않기 위함
+
+    @OneToMany
+    @JoinColumn(name = "TEAM_ID")
+    private List<Member> members = new ArrayList<>(); // 일대다 단방향, members에는 팀이 없게
 
     public Long getId() {
         return id;
@@ -39,8 +44,8 @@ public class Team {
         this.members = members;
     }
 
-    public void addMember(Member member) {
+/*    public void addMember(Member member) {
         member.setTeam(this);
         members.add(member);
-    }
+    }*/
 }
