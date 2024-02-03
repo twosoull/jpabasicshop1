@@ -1,4 +1,5 @@
 import jpabook.jpashop.domain.Member;
+import jpabook.jpashop.domain.Movie;
 import jpabook.jpashop.domain.Team;
 
 import javax.persistence.EntityManager;
@@ -19,6 +20,20 @@ public class main {
 
         try{
 
+            Movie movie = new Movie();
+
+            movie.setActor("actor");
+            movie.setName("영화이름");
+            movie.setDirector("디렉터");
+
+
+            em.persist(movie);
+            em.flush();
+            em.clear();
+
+            Movie movie1 = em.find(Movie.class, movie.getId());
+
+            System.out.println("movie = " + movie1);
             tx.commit();
         }catch (Exception e){
             tx.rollback();
