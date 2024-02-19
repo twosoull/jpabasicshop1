@@ -16,6 +16,9 @@ public class Member extends BaseEntity{
     @Column(name = "USERNAME")
     private String username;
 
+    @ManyToOne
+    private Team team;
+
     //주소
     @Embedded
     private Address address;

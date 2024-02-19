@@ -4,6 +4,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.util.List;
 
 public class main {
@@ -17,39 +20,31 @@ public class main {
 
 
         try{
+            Team team =new Team();
+            team.setName("ddsad");
+            em.persist(team);
 
             Member member = new Member();
             member.setUsername("member1");
-            member.setAddress(new Address("city1","street","zipcode"));
-
-            member.getFavoriteFoods().add("치킨");
-            member.getFavoriteFoods().add("피자");
-            member.getFavoriteFoods().add("족발");
-
-            member.getAddressHistory().add(new AddressEntity("ccc","Ddd","Fdsfs"));
-            member.getAddressHistory().add(new AddressEntity("ccc","Ddd","Fdsfs"));
-
             em.persist(member);
+
             em.flush();
             em.clear();
-/*
 
-            //조회
-            Member findMember = em.find(Member.class, member.getId());
+            //이렇게하면 조인이 가능하지만 조인 이용시에는 이렇게 사용하면 안된다
+            //List<Member> resultList = em.createQuery("select m.team from Member m", Member.class).getResultList();
 
-            //수정
-            // findMember.getAddress().setCity("newCiry"); 값타입은 절대로 이렇게 바꾸면 안된다. 사고난다.
-            // 통으로 갈아끼우기
-            findMember.setAddress(new Address("newCiry","ddd","safdasd"));
-            //치킨 -> 한식
-            findMember.getFavoriteFoods().remove("치킨");
-            findMember.getFavoriteFoods().add("한식");
+            //이렇게 해야 조인이 예측이 된다.
+            //List<Team> resultList1 = em.createQuery("select t from Member m join m.team t", Team.class).getResultList();
 
-            // 주소 변경 // remove는 equals를 사용해서 변경한다.
-            findMember.getAddressHistory().remove(new Address("ccc","Ddd","Fdsfs"));
-            findMember.getAddressHistory().add(new Address("cc124","Ddddas","Fds124fs"));
-*/
+            //임베디드 타입은 같은 테이블 안에 있기 때문에 사용해도 문제없다.
+            //em.createQuery("select m.address from Member m", Address.class).getResultList();
 
+            System.out.println("asdsa");
+
+            em.createQuery("select new jpabook.jpashop.domain.MemberDTO(m.username) from Member m", MemberDTO.class).getResultList();
+
+            System.out.println("zxvas");
             tx.commit();
         }catch (Exception e){
             tx.rollback();
