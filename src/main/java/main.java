@@ -24,9 +24,14 @@ public class main {
             team.setName("ddsad");
             em.persist(team);
 
+
             Member member = new Member();
-            member.setUsername("member1");
+            member.setUsername("member");
+            member.setTeam(team);
+            member.setAge(1);
+            member.setMemberType(MemberType.ADMIN);
             em.persist(member);
+
 
             em.flush();
             em.clear();
@@ -40,14 +45,30 @@ public class main {
             //임베디드 타입은 같은 테이블 안에 있기 때문에 사용해도 문제없다.
             //em.createQuery("select m.address from Member m", Address.class).getResultList();
 
-            System.out.println("asdsa");
+            //em.createQuery("select new jpabook.jpashop.domain.MemberDTO(m.username) from Member m", MemberDTO.class).getResultList();
+/*
+            List<Member> resultList = em.createQuery("select m from Member m order by m.age desc", Member.class)
+                    .setFirstResult(0)
+                    .setMaxResults(10)
+                    .getResultList();
 
-            em.createQuery("select new jpabook.jpashop.domain.MemberDTO(m.username) from Member m", MemberDTO.class).getResultList();
+            for (Member m : resultList) {
 
-            System.out.println("zxvas");
+                System.out.println("dddd : " + m.getUsername());
+            }*/
+
+            String query = "select function('group_concat',m.username) from Member m ";
+
+            List<String> resultList = em.createQuery(query).getResultList();
+
+            for (String o : resultList) {
+                System.out.println("object" + o);
+            }
+
             tx.commit();
         }catch (Exception e){
             tx.rollback();
+            e.printStackTrace();
         }finally {
             em.close();
 

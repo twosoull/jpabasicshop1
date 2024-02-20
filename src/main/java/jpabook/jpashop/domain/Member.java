@@ -16,8 +16,39 @@ public class Member extends BaseEntity{
     @Column(name = "USERNAME")
     private String username;
 
+    private int age;
+
+    private MemberType memberType;
+
+    public MemberType getMemberType() {
+        return memberType;
+    }
+
+    public void setMemberType(MemberType memberType) {
+        this.memberType = memberType;
+    }
+
+    public Member() {
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
     @ManyToOne
     private Team team;
+
+    public Team getTeam() {
+        return team;
+    }
+
+    public void setTeam(Team team) {
+        this.team = team;
+    }
 
     //주소
     @Embedded
