@@ -20,49 +20,52 @@ public class main {
 
 
         try{
-            Team team =new Team();
-            team.setName("ddsad");
-            em.persist(team);
 
+            Team teamA =new Team();
+            teamA.setName("ddsad");
+            em.persist(teamA);
 
-            Member member = new Member();
-            member.setUsername("member");
-            member.setTeam(team);
-            member.setAge(1);
-            member.setMemberType(MemberType.ADMIN);
-            em.persist(member);
+            Team teamB =new Team();
+            teamB.setName("teamB");
+            em.persist(teamB);
 
+            Team teamC =new Team();
+            teamC.setName("teamC");
+            em.persist(teamC);
+
+            Member memberA = new Member();
+            memberA.setUsername("memberA");
+            memberA.setTeam(teamA);
+            memberA.setAge(1);
+            memberA.setMemberType(MemberType.ADMIN);
+
+            Member memberB = new Member();
+            memberB.setUsername("memberB");
+            memberB.setTeam(teamA);
+            memberB.setAge(1);
+            memberB.setMemberType(MemberType.ADMIN);
+
+            Member memberC = new Member();
+            memberC.setUsername("memberC");
+            memberC.setTeam(teamB);
+            memberC.setAge(1);
+            memberC.setMemberType(MemberType.ADMIN);
+
+            em.persist(memberA);
+            em.persist(memberB);
+            em.persist(memberC);
 
             em.flush();
             em.clear();
 
-            //이렇게하면 조인이 가능하지만 조인 이용시에는 이렇게 사용하면 안된다
-            //List<Member> resultList = em.createQuery("select m.team from Member m", Member.class).getResultList();
+            //String query = "select m from Member m ";
+            //String query = "select m from Member m join fetch m.team";
 
-            //이렇게 해야 조인이 예측이 된다.
-            //List<Team> resultList1 = em.createQuery("select t from Member m join m.team t", Team.class).getResultList();
+            List<Member> resultList = em.createNamedQuery("Member.findByUsername",Member.class)
+                    .setParameter("username" , memberA.getUsername()).getResultList();
 
-            //임베디드 타입은 같은 테이블 안에 있기 때문에 사용해도 문제없다.
-            //em.createQuery("select m.address from Member m", Address.class).getResultList();
-
-            //em.createQuery("select new jpabook.jpashop.domain.MemberDTO(m.username) from Member m", MemberDTO.class).getResultList();
-/*
-            List<Member> resultList = em.createQuery("select m from Member m order by m.age desc", Member.class)
-                    .setFirstResult(0)
-                    .setMaxResults(10)
-                    .getResultList();
-
-            for (Member m : resultList) {
-
-                System.out.println("dddd : " + m.getUsername());
-            }*/
-
-            String query = "select function('group_concat',m.username) from Member m ";
-
-            List<String> resultList = em.createQuery(query).getResultList();
-
-            for (String o : resultList) {
-                System.out.println("object" + o);
+            for (Member o : resultList) {
+                System.out.println("Member " + o.getUsername());
             }
 
             tx.commit();
